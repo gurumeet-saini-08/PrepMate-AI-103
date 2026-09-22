@@ -19,8 +19,7 @@
 * **Institution:** Chitkara University, Punjab
 * **Department:** Computer Science & Engineering (AIML)
 
-| # | Team Member Name | Roll Number / Student ID |
-| :-: | :--- | :--- | :--- |
+| # | Team Member Name | Roll Number |
 | **1.** | **Gurumeet Saini** | `2410992521` | (Team Leader)
 | **2.** | **Amneet Kaur** | `2410992674` |
 | **3.** | **Aman Saini** | `2410992672` |
@@ -330,6 +329,6 @@ python -m pytest tests/ -v
 ---
 
 <p align="center">
-  <strong>PrepMate</strong> &copy; 2026 | Chitkara University INBIOT AI-103 Group Project #19<br>
+  <strong>PrepMate</strong> &copy; 2026 | Chitkara University INBIOT AI-103 Group Project<br>
   <em>Empowering Students to Speak with Clarity, Confidence, and Technical Depth.</em>
 </p>
