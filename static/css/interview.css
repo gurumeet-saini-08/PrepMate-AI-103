@@ -1,0 +1,402 @@
+/* Interview Room Studio Layout */
+.interview-layout {
+  max-width: 960px;
+  margin: 1.5rem auto 3rem;
+}
+
+.interview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.interview-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.interview-progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background-color: #e2e8f0;
+  border-radius: var(--radius-full);
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+
+.interview-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  transition: width 0.4s ease;
+}
+
+/* AI Interviewer Avatar & Card */
+.interviewer-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.interviewer-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.interviewer-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+  position: relative;
+}
+
+.interviewer-info h3 {
+  font-size: 1.15rem;
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.interviewer-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.question-box {
+  background: #f8fafc;
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.question-text {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--dark);
+  line-height: 1.5;
+}
+
+.question-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+/* Candidate Recording Studio */
+.recording-studio {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.studio-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* Audio Waveform Canvas */
+.waveform-container {
+  background: #0f172a;
+  border-radius: var(--radius-md);
+  height: 120px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+#waveformCanvas {
+  width: 100%;
+  height: 100%;
+}
+
+.waveform-placeholder {
+  position: absolute;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Live Speech Metrics Hud */
+.live-metrics-hud {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.metric-tile {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  text-align: center;
+}
+
+.metric-tile .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.metric-tile .value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-top: 0.2rem;
+}
+
+/* Live Recording Controls */
+.studio-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-record {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #cbd5e1;
+  background-color: #ef4444;
+  color: white;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-record:hover {
+  transform: scale(1.05);
+}
+
+.btn-record.recording {
+  background-color: #dc2626;
+  animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Live Transcript Box */
+.transcript-box {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  min-height: 90px;
+  max-height: 160px;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: 1.5rem;
+}
+
+.transcript-box.empty {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Adaptive Agent Notification Banner */
+.agent-banner {
+  background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.agent-banner-icon {
+  font-size: 1.4rem;
+}
+
+.agent-banner-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #3730a3;
+}
+
+.agent-banner-text {
+  font-size: 0.85rem;
+  color: #4338ca;
+  margin-top: 0.2rem;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   INTERVIEW ROOM RESPONSIVE STYLES
+   ────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .interview-layout {
+    margin: 0.75rem auto 2rem;
+  }
+
+  .interview-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .interview-meta {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .interview-header > div:last-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .interviewer-card {
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .interviewer-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  .interviewer-info h3 {
+    font-size: 1.05rem;
+  }
+
+  .question-box {
+    padding: 1rem 1.15rem;
+  }
+
+  .question-text {
+    font-size: 1.15rem;
+    line-height: 1.45;
+  }
+
+  .recording-studio {
+    padding: 1.25rem 1rem;
+  }
+
+  .studio-tabs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tab-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .waveform-container {
+    height: 90px;
+  }
+
+  .live-metrics-hud {
+    gap: 0.5rem;
+  }
+
+  .metric-tile {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .metric-tile .label {
+    font-size: 0.68rem;
+  }
+
+  .metric-tile .value {
+    font-size: 1.15rem;
+  }
+
+  .transcript-box {
+    padding: 0.85rem;
+    font-size: 0.9rem;
+    min-height: 75px;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-text {
+    font-size: 1.05rem;
+  }
+
+  .btn-record {
+    width: 58px;
+    height: 58px;
+    font-size: 1.45rem;
+  }
+
+  .studio-controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .studio-controls .btn {
+    width: 100%;
+  }
+
+  #submitBtn {
+    width: 100%;
+  }
+}

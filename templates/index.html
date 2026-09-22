@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}PrepMate - AI-Powered Response & Communication Coach{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Crack Your Tech Interviews With <span>Adaptive AI Coaching</span>
+    </h1>
+    <p class="hero-desc">
+      PrepMate is an AI-powered platform that creates a realistic interview practice environment for students.
+      It evaluates not only what a student answers, but also how they communicate their answer, helping identify the quality of the response and communication areas for improvement.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg"><i class="bi bi-rocket-takeoff-fill"></i> Start Practicing Free</a>
+      <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-lg"><i class="bi bi-box-arrow-in-right"></i> Sign In / Demo Student</a>
+    </div>
+  </div>
+
+  <div class="hero-visual" id="heroVisual">
+    <div class="hero-visual-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+        <span style="font-weight: 700; font-size: 0.95rem; color: var(--primary); display: flex; align-items: center; gap: 0.45rem;">
+          <i class="bi bi-mic-fill"></i> PrepMate Live Studio
+        </span>
+        <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Question 3 of 5</span>
+      </div>
+      <p style="font-size: 1.08rem; font-weight: 700; color: var(--dark); line-height: 1.45; margin-bottom: 1.15rem;">
+        "Explain polymorphism in Java, and how does runtime dispatch resolve method calls?"
+      </p>
+      <div style="background: #f8fafc; border: 1px solid var(--border); padding: 0.85rem; border-radius: 8px; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.45rem;">
+          <span style="display: flex; align-items: center; gap: 0.4rem;">
+            <span class="status-dot"></span> Candidate Speaking...
+          </span>
+          <span style="color: #059669; font-weight: 600;">132 WPM (Optimal)</span>
+        </div>
+        <div style="height: 5px; width: 100%; background: #e2e8f0; border-radius: 3px; overflow: hidden;">
+          <div style="width: 75%; height: 100%; background: linear-gradient(90deg, #4f46e5, #06b6d4);"></div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.85rem;">
+        <div style="background: #f8fafc; border: 1px solid var(--border); padding: 0.65rem 0.85rem; border-radius: 8px;">
+          <span style="color: var(--text-muted); display: block; font-size: 0.8rem;">Response Correctness</span>
+          <strong style="color: var(--primary); font-size: 1.15rem;">8.5 / 10</strong>
+        </div>
+        <div style="background: #f8fafc; border: 1px solid var(--border); padding: 0.65rem 0.85rem; border-radius: 8px;">
+          <span style="color: var(--text-muted); display: block; font-size: 0.8rem;">Fillers Detected</span>
+          <strong style="color: #059669; font-size: 1.15rem;">1 ('basically')</strong>
+        </div>
+      </div>
+      <div style="margin-top: 1rem; padding: 0.65rem 0.85rem; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; font-size: 0.82rem; color: #3730a3; display: flex; align-items: flex-start; gap: 0.45rem;">
+        <i class="bi bi-robot" style="font-size: 1.1rem; flex-shrink: 0; color: var(--primary);"></i>
+        <span><strong>AI Agent:</strong> High accuracy &amp; fluency. Escalating difficulty to internal virtual method table (vtable) mechanics!</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- The Dual Dimension Section -->
+<section class="features-section">
+  <div class="section-header">
+    <h2 class="section-title">The Real Problem We Are Solving</h2>
+    <p class="section-subtitle">
+      Students memorize answers alone, but never know if their answer was technically complete, or if verbal delivery (fillers, pacing, rambling) would hold them back.
+    </p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div style="font-size: 2rem; margin-bottom: 0.75rem; color: var(--primary);"><i class="bi bi-bullseye"></i></div>
+      <h3 style="margin-bottom: 0.5rem;">1. Response Correctness</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+        Powered by Generative AI. We don't just search for keywords. The AI checks if your answer addresses core concepts, notes missing trade-offs, and scores accuracy on a 0-10 rubric.
+      </p>
+      <span class="badge badge-primary">Microsoft Foundry / GenAI</span>
+    </div>
+
+    <div class="card">
+      <div style="font-size: 2rem; margin-bottom: 0.75rem; color: #0891b2;"><i class="bi bi-mic-fill"></i></div>
+      <h3 style="margin-bottom: 0.5rem;">2. Communication Analysis</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+        Voice goes through Azure AI Speech into speech analytics. Measures real-time Words Per Minute (WPM), catches filler words ('um', 'basically'), detects pauses, and rates answer structure.
+      </p>
+      <span class="badge badge-success">Azure AI Speech</span>
+    </div>
+
+    <div class="card">
+      <div style="font-size: 2rem; margin-bottom: 0.75rem; color: #7c3aed;"><i class="bi bi-cpu-fill"></i></div>
+      <h3 style="margin-bottom: 0.5rem;">3. Adaptive AI Agent</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+        The interview isn't a static form. If you give a strong answer, the AI agent escalates difficulty. If you struggle, it scaffolds with intuitive real-world analogies.
+      </p>
+      <span class="badge badge-warning">Agent Decision Engine</span>
+    </div>
+  </div>
+</section>
+
+<!-- Complete Workflow Diagram -->
+<section class="workflow-section">
+  <div style="text-align: center; max-width: 650px; margin: 0 auto 2rem;">
+    <h3 style="font-size: 1.6rem; font-weight: 800; color: var(--dark);">The Complete PrepMate Workflow</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">Seamless end-to-end integration across speech, reasoning, and adaptive feedback.</p>
+  </div>
+
+  <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem; text-align: center;">
+    <div style="flex: 1; min-width: 140px; padding: 1.1rem 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div style="font-size: 1.4rem; color: var(--primary); margin-bottom: 0.35rem;"><i class="bi bi-person-lines-fill"></i></div>
+      <div style="font-weight: 700; color: var(--primary);">1. Profile Setup</div>
+      <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.3rem;">Skills, CGPA, Target Role</div>
+    </div>
+    <div class="workflow-arrow"><i class="bi bi-arrow-right"></i></div>
+    <div style="flex: 1; min-width: 140px; padding: 1.1rem 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div style="font-size: 1.4rem; color: var(--primary); margin-bottom: 0.35rem;"><i class="bi bi-chat-square-text-fill"></i></div>
+      <div style="font-weight: 700; color: var(--primary);">2. AI Asks Question</div>
+      <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.3rem;">Azure TTS / Display</div>
+    </div>
+    <div class="workflow-arrow"><i class="bi bi-arrow-right"></i></div>
+    <div style="flex: 1; min-width: 140px; padding: 1.1rem 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div style="font-size: 1.4rem; color: var(--primary); margin-bottom: 0.35rem;"><i class="bi bi-mic-fill"></i></div>
+      <div style="font-weight: 700; color: var(--primary);">3. Student Speaks</div>
+      <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.3rem;">Azure Speech-to-Text</div>
+    </div>
+    <div class="workflow-arrow"><i class="bi bi-arrow-right"></i></div>
+    <div style="flex: 1; min-width: 140px; padding: 1.1rem 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div style="font-size: 1.4rem; color: var(--primary); margin-bottom: 0.35rem;"><i class="bi bi-bar-chart-fill"></i></div>
+      <div style="font-weight: 700; color: var(--primary);">4. Dual Evaluation</div>
+      <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.3rem;">Correctness & Delivery</div>
+    </div>
+    <div class="workflow-arrow"><i class="bi bi-arrow-right"></i></div>
+    <div style="flex: 1; min-width: 140px; padding: 1.1rem 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <div style="font-size: 1.4rem; color: var(--primary); margin-bottom: 0.35rem;"><i class="bi bi-award-fill"></i></div>
+      <div style="font-weight: 700; color: var(--primary);">5. Final Report</div>
+      <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.3rem;">Scorecard & Daily Coach</div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to action card -->
+<div class="card" style="text-align: center; padding: 3rem 2rem; background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: white;">
+  <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem;">Ready for your next mock interview?</h2>
+  <p style="font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto 2rem;">
+    Experience a dynamic interview tailored specifically to your target software role.
+  </p>
+  <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+    <a href="{{ url_for('auth.register') }}" class="btn btn-secondary btn-lg" style="color: var(--primary); font-weight: 700;"><i class="bi bi-person-plus-fill"></i> Create Free Account</a>
+    <a href="{{ url_for('auth.login') }}" class="btn btn-lg" style="background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3);"><i class="bi bi-box-arrow-in-right"></i> Login with Demo Student</a>
+  </div>
+</div>
+{% endblock %}

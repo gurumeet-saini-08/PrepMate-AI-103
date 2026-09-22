@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Report - PrepMate{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/report.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="report-container">
+
+  <!-- Responsible AI: Privacy Banner – Ephemeral Audio Notice -->
+  <div style="background: #ecfdf5; border: 1px solid #6ee7b7; border-radius: 8px; padding: 0.65rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem; font-size: 0.88rem;">
+    <span style="font-size: 1.2rem;">🔒</span>
+    <span style="color: #065f46;">
+      <strong>Privacy Notice:</strong> Your microphone audio was automatically deleted from our servers immediately after transcription. Only the text transcript is stored. You can delete this entire session at any time using the button below.
+    </span>
+  </div>
+
+  <!-- Report Header -->
+  <div class="report-header">
+    <div class="report-title-group">
+      <span class="badge badge-success" style="margin-bottom: 0.5rem;">Interview Completed</span>
+      <h1>Interview Performance Report</h1>
+      <div class="report-meta">
+        <span>Candidate: <strong>{{ user.name }}</strong></span>
+        <span>Target Role: <strong>{{ interview.role }}</strong></span>
+        <span>Difficulty: <strong>{{ interview.difficulty }}</strong></span>
+        <span>Duration: <strong>{{ interview.duration_formatted() }}</strong></span>
+      </div>
+    </div>
+    <div class="no-print" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+      <button type="button" id="requestReviewBtn" class="btn btn-secondary">
+        🧑‍🏫 Request Mentor Review
+      </button>
+      <button type="button" id="deleteSessionBtn" class="btn btn-secondary" style="color: #dc2626; border-color: #dc2626;">
+        🗑️ Delete My Data
+      </button>
+      <button type="button" id="printReportBtn" class="btn btn-secondary">
+        🖨️ Print / Save PDF
+      </button>
+      <a href="{{ url_for('interview.setup') }}" class="btn btn-primary">
+        🎙️ New Interview
+      </a>
+    </div>
+  </div>
+
+  <!-- Score Trio -->
+  <div class="score-trio">
+    <div class="score-card highlight">
+      <div class="score-card-title">Overall Performance</div>
+      <div class="score-badge-circle">
+        {{ interview.overall_score }}%
+      </div>
+      <div class="score-card-subtitle">Synthesized technical mastery & speaking poise</div>
+    </div>
+
+    <div class="score-card">
+      <div class="score-card-title">Response Correctness</div>
+      <div class="score-badge-circle tech">
+        {{ interview.technical_score }}%
+      </div>
+      <div class="score-card-subtitle">Evaluated by Generative AI against expected concepts</div>
+    </div>
+
+    <div class="score-card">
+      <div class="score-card-title">Communication Delivery</div>
+      <div class="score-badge-circle comm">
+        {{ interview.communication_score }}%
+      </div>
+      <div class="score-card-subtitle">Speech pace, fluency, filler reduction & structure</div>
+    </div>
+  </div>
+
+  <!-- Communication Metrics Breakdown (Section 10) -->
+  <div class="comm-metrics-grid">
+    <div class="comm-metric-card">
+      <div class="icon">⚡</div>
+      <div class="value">{{ interview.avg_wpm }}</div>
+      <div class="label">Avg Speaking Speed (WPM)</div>
+      <small style="color: var(--text-muted); font-size: 0.75rem;">Target: 120 - 150 WPM</small>
+    </div>
+
+    <div class="comm-metric-card">
+      <div class="icon">⚠️</div>
+      <div class="value" style="color: #ef4444;">{{ interview.total_fillers }}</div>
+      <div class="label">Total Filler Words</div>
+      <small style="color: var(--text-muted); font-size: 0.75rem;">('um', 'uh', 'basically', 'like')</small>
+    </div>
+
+    <div class="comm-metric-card">
+      <div class="icon">⏸️</div>
+      <div class="value">{{ interview.total_pauses }}</div>
+      <div class="label">Hesitations & Pauses</div>
+      <small style="color: var(--text-muted); font-size: 0.75rem;">Extended silences detected</small>
+    </div>
+
+    <div class="comm-metric-card">
+      <div class="icon">🎯</div>
+      <div class="value" style="color: #10b981;">
+        {% if interview.communication_score >= 80 %}
+          Excellent
+        {% elif interview.communication_score >= 65 %}
+          Good
+        {% else %}
+          Moderate
+        {% endif %}
+      </div>
+      <div class="label">Fluency Index</div>
+      <small style="color: var(--text-muted); font-size: 0.75rem;">Delivery stability rating</small>
+    </div>
+  </div>
+
+  <!-- Executive Strengths & Targeted Action Plan -->
+  <div class="feedback-summary-grid">
+    <div class="summary-card strengths">
+      <h3>
+        <span style="color: var(--success);">✓</span> Key Candidate Strengths
+      </h3>
+      <ul class="feedback-list">
+        {% if interview.summary_strengths %}
+          {% for line in interview.summary_strengths.split('\n') %}
+            {% if line.strip() %}
+              <li><span style="color: var(--success); font-weight: bold;">✓</span> {{ line }}</li>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <li><span style="color: var(--success); font-weight: bold;">✓</span> Demonstrated solid technical understanding and engagement.</li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="summary-card improvements">
+      <h3>
+        <span style="color: var(--accent);">•</span> Targeted Areas for Improvement
+      </h3>
+      <ul class="feedback-list">
+        {% if interview.summary_improvements %}
+          {% for line in interview.summary_improvements.split('\n') %}
+            {% if line.strip() %}
+              <li><span style="color: var(--accent); font-weight: bold;">•</span> {{ line }}</li>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <li><span style="color: var(--accent); font-weight: bold;">•</span> Practice structuring answers with concrete real-world code examples.</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Question-by-Question Deep Dive -->
+  <div class="breakdown-section">
+    <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark); margin-bottom: 1.5rem;">
+      Detailed Question-by-Question Analysis
+    </h3>
+
+    {% for q in questions %}
+      <div class="question-accordion-item">
+        <div class="question-item-header" style="cursor: pointer;">
+          <div>
+            <span class="badge badge-primary" style="margin-right: 0.5rem;">Q{{ q.order_index }}</span>
+            <strong style="font-size: 1.05rem; color: var(--dark);">{{ q.question_text }}</strong>
+          </div>
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            {% if q.response %}
+              <span style="font-weight: 700; color: #0891b2; font-size: 0.95rem;">
+                Correctness: {{ q.response.correctness_score }}/10
+              </span>
+              {% if q.response.communication %}
+                <span style="font-weight: 700; color: #059669; font-size: 0.95rem;">
+                  Comm: {{ q.response.communication.communication_score }}/10
+                </span>
+              {% endif %}
+            {% else %}
+              <span class="badge badge-warning">Skipped / Unanswered</span>
+            {% endif %}
+            <span style="color: var(--text-muted); font-size: 0.85rem;">▼</span>
+          </div>
+        </div>
+
+        <div class="question-item-body">
+          {% if q.response %}
+            <div style="margin-bottom: 1rem;">
+              <span class="form-label" style="margin-bottom: 0.2rem;">Candidate Spoken Response Transcript:</span>
+              <div class="transcript-display">
+                "{{ q.response.transcript }}"
+              </div>
+            </div>
+
+            <!-- Communication Metrics for this question -->
+            {% if q.response.communication %}
+              <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.85rem; background: #f8fafc; padding: 0.75rem 1rem; border-radius: 6px;">
+                <span>⚡ Speaking Speed: <strong>{{ q.response.communication.speaking_speed_wpm }} WPM</strong></span>
+                <span>⚠️ Fillers: <strong>{{ q.response.communication.filler_count }}</strong></span>
+                <span>⏸️ Pauses: <strong>{{ q.response.communication.pause_count }}</strong></span>
+                <span>📐 Structure: <strong>{{ q.response.communication.structure_score }}/10</strong></span>
+                <span>🎯 Fluency: <strong>{{ q.response.communication.fluency_rating }}</strong></span>
+              </div>
+            {% endif %}
+
+            <div class="concepts-grid">
+              <div style="background: #ecfdf5; border-left: 3px solid var(--success); padding: 0.75rem; border-radius: 4px; font-size: 0.9rem;">
+                <strong style="color: #065f46; display: block; margin-bottom: 0.2rem;">✓ Accurate Concepts Covered:</strong>
+                <p style="color: #047857; margin: 0;">{{ q.response.strengths }}</p>
+              </div>
+
+              <div style="background: #fffbeb; border-left: 3px solid var(--accent); padding: 0.75rem; border-radius: 4px; font-size: 0.9rem;">
+                <strong style="color: #92400e; display: block; margin-bottom: 0.2rem;">⚠️ Missing Concepts / Gaps:</strong>
+                <p style="color: #b45309; margin: 0;">{{ q.response.improvements }}</p>
+              </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 0.85rem; border-radius: 6px; font-size: 0.9rem; margin-bottom: 1rem;">
+              <strong style="color: var(--dark);">💡 AI Coach Qualitative Feedback:</strong>
+              <p style="color: var(--text-main); margin-top: 0.3rem;">{{ q.response.qualitative_feedback }}</p>
+            </div>
+
+            {% if q.response.model_answer %}
+              <div class="model-answer-display">
+                <strong style="color: var(--primary); font-size: 0.9rem;">📖 Model Interview Answer:</strong>
+                <p style="color: #1e293b; margin-top: 0.3rem; font-size: 0.9rem;">{{ q.response.model_answer }}</p>
+              </div>
+            {% endif %}
+          {% else %}
+            <p style="color: var(--text-muted); font-style: italic;">No response was recorded for this question.</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-secondary">
+      &larr; Return to Dashboard
+    </a>
+    <a href="{{ url_for('interview.setup') }}" class="btn btn-primary btn-lg">
+      Start Another Mock Interview &rarr;
+    </a>
+  </div>
+
+  <!-- Responsible AI: AI Disclosure Footer -->
+  <div style="margin-top: 2rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; font-size: 0.85rem; color: var(--text-muted);">
+    <strong style="color: var(--dark);">🤖 AI Transparency Disclosure</strong> &mdash;
+    Scores on this report were generated by an AI model (GPT‑5‑Mini / Azure OpenAI) using a standardized rubric.
+    Evaluations assess <em>conceptual understanding</em> and are accent/dialect neutral. They are advisory in nature and
+    are <strong>not</strong> an automated hiring or rejection decision.
+    If you feel a score is unfair, use the <strong>"Request Mentor Review"</strong> button above to flag it for human review.
+    <a href="{{ url_for('responsible_ai') }}" style="color: var(--primary); text-decoration: none; margin-left: 0.25rem;">→ View Our Responsible AI Policy</a>
+  </div>
+</div>
+
+<!-- ── Request Mentor Review Modal ──────────────────────────────────────────── -->
+<div id="reviewModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; padding: 1rem;">
+  <div style="background:#fff; border-radius:12px; padding:1.5rem 1.25rem; max-width:480px; width:min(96%, 480px); box-shadow:0 25px 50px rgba(0,0,0,0.2);">
+    <h3 style="margin-bottom:0.5rem; color: var(--dark);">🧑‍🏫 Request Mentor Review</h3>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">
+      You can contest your AI-generated score. A human mentor/professor will review your interview
+      session and provide feedback. This is part of our Human Oversight commitment.
+    </p>
+    <div class="form-group" style="margin-bottom:1rem;">
+      <label class="form-label" for="reviewNote">Your Note (optional)</label>
+      <textarea id="reviewNote" class="form-control" rows="3"
+        placeholder="Briefly explain why you feel the score is incorrect or what you wanted the AI to recognize…"></textarea>
+    </div>
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end; flex-wrap: wrap;">
+      <button type="button" id="cancelReviewBtn" class="btn btn-secondary">Cancel</button>
+      <button type="button" id="submitReviewBtn" class="btn btn-primary">Submit Review Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Delete Session Modal ─────────────────────────────────────────────────── -->
+<div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; padding: 1rem;">
+  <div style="background:#fff; border-radius:12px; padding:1.5rem 1.25rem; max-width:480px; width:min(96%, 480px); box-shadow:0 25px 50px rgba(0,0,0,0.2);">
+    <h3 style="margin-bottom:0.5rem; color:#dc2626;">🗑️ Delete Session Data</h3>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">
+      This will <strong>permanently delete</strong> all data for this interview session including your transcript,
+      scores, and communication analysis. This action <strong>cannot be undone</strong>.
+      <br><br>This is your <em>Right to be Forgotten</em> under our Privacy & Data policy.
+    </p>
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end; flex-wrap: wrap;">
+      <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">Cancel</button>
+      <button type="button" id="confirmDeleteBtn" class="btn btn-primary" style="background:#dc2626; border-color:#dc2626;">Yes, Delete Permanently</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/report.js') }}"></script>
+<script>
+(function () {
+  const SESSION_ID = {{ interview.id }};
+
+  // ── Request Mentor Review ─────────────────────────────────────────────────
+  const reviewModal  = document.getElementById('reviewModal');
+  const requestBtn   = document.getElementById('requestReviewBtn');
+  const cancelReview = document.getElementById('cancelReviewBtn');
+  const submitReview = document.getElementById('submitReviewBtn');
+  const reviewNote   = document.getElementById('reviewNote');
+
+  if (requestBtn) {
+    requestBtn.addEventListener('click', () => {
+      reviewModal.style.display = 'flex';
+    });
+  }
+  if (cancelReview) {
+    cancelReview.addEventListener('click', () => {
+      reviewModal.style.display = 'none';
+    });
+  }
+  if (submitReview) {
+    submitReview.addEventListener('click', async () => {
+      submitReview.disabled = true;
+      submitReview.textContent = 'Submitting…';
+      try {
+        const res = await fetch(`/interview/${SESSION_ID}/request-review`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ note: reviewNote.value }),
+        });
+        const data = await res.json();
+        reviewModal.style.display = 'none';
+        if (data.success) {
+          showToast(data.message, 'success');
+          // Disable the button so it can't be clicked again
+          requestBtn.disabled = true;
+          requestBtn.textContent = '✅ Review Requested';
+        } else {
+          showToast(data.error || 'Could not submit review request. Please try again.', 'error');
+        }
+      } catch (e) {
+        showToast('Network error. Please try again.', 'error');
+      } finally {
+        submitReview.disabled = false;
+        submitReview.textContent = 'Submit Review Request';
+      }
+    });
+  }
+
+  // ── Delete Session ────────────────────────────────────────────────────────
+  const deleteModal  = document.getElementById('deleteModal');
+  const deleteBtn    = document.getElementById('deleteSessionBtn');
+  const cancelDelete = document.getElementById('cancelDeleteBtn');
+  const confirmDelete= document.getElementById('confirmDeleteBtn');
+
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+      deleteModal.style.display = 'flex';
+    });
+  }
+  if (cancelDelete) {
+    cancelDelete.addEventListener('click', () => {
+      deleteModal.style.display = 'none';
+    });
+  }
+  if (confirmDelete) {
+    confirmDelete.addEventListener('click', async () => {
+      confirmDelete.disabled = true;
+      confirmDelete.textContent = 'Deleting…';
+      try {
+        const res = await fetch(`/interview/${SESSION_ID}/delete`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = data.redirect_url || '/';
+        } else {
+          showToast(data.error || 'Could not delete session.', 'error');
+          confirmDelete.disabled = false;
+          confirmDelete.textContent = 'Yes, Delete Permanently';
+        }
+      } catch (e) {
+        showToast('Network error. Please try again.', 'error');
+        confirmDelete.disabled = false;
+        confirmDelete.textContent = 'Yes, Delete Permanently';
+      }
+    });
+  }
+
+  // ── Toast Utility ────────────────────────────────────────────────────────
+  function showToast(msg, type) {
+    const t = document.createElement('div');
+    t.style.cssText = `
+      position:fixed; bottom:1.5rem; right:1.5rem; z-index:99999;
+      background: ${type === 'success' ? '#10b981' : '#ef4444'};
+      color:#fff; padding:0.85rem 1.25rem; border-radius:8px;
+      font-size:0.9rem; font-weight:600; max-width:380px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease;
+    `;
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 6000);
+  }
+})();
+</script>
+{% endblock %}

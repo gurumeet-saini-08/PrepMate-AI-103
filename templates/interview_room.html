@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Room - PrepMate{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/interview.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="interview-layout">
+  <!-- Hidden Session & Question Identifiers -->
+  <input type="hidden" id="interviewSessionId" value="{{ interview.id }}">
+  <input type="hidden" id="currentQuestionId" value="{{ question.id }}">
+
+  <!-- Responsible AI: AI Disclosure + Audio Privacy Banner -->
+  <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 0.65rem 1rem; margin-bottom: 0.85rem; font-size: 0.82rem; color: #1e40af; display: flex; gap: 0.65rem; align-items: flex-start; line-height: 1.45;">
+    <span style="font-size: 1.1rem; flex-shrink: 0;">🤖</span>
+    <span>
+      <strong>AI Disclosure:</strong> Your responses are evaluated by GPT-5-Mini (Azure AI) using a fair, accent-neutral rubric.
+      Scores are advisory only — not hiring decisions.
+      🎤 <strong>Audio is deleted immediately after transcription.</strong>
+      <a href="{{ url_for('responsible_ai') }}" style="color: #1d4ed8; text-decoration:none; font-weight:600; margin-left:0.25rem; white-space: nowrap;">Policy →</a>
+    </span>
+  </div>
+
+  <!-- Top Metadata & Progress -->
+  <div class="interview-header">
+    <div class="interview-meta">
+      <span class="badge badge-primary">{{ interview.role }}</span>
+      <span class="badge badge-warning">{{ question.difficulty_level }}</span>
+      {% if question.question_type == 'intro' %}
+        <span class="badge" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-weight: 600;">👋 Candidate Introduction</span>
+      {% elif question.question_type == 'transition_technical' %}
+        <span class="badge" style="background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; font-weight: 600;">🎯 Core Technical</span>
+      {% elif question.question_type == 'escalate' %}
+        <span class="badge badge-danger">⚡ Escalated Depth</span>
+      {% elif question.question_type == 'simplify' %}
+        <span class="badge badge-success">🌱 Guided Analogy</span>
+      {% elif question.question_type == 'structure_followup' %}
+        <span class="badge badge-primary">🧩 Structured Follow-up</span>
+      {% endif %}
+    </div>
+    <div style="display: flex; align-items: center; gap: 1.25rem;">
+      <span style="font-weight: 700; color: var(--dark); font-size: 1rem;">
+        Question {{ current_index }} of {{ total_questions }}
+      </span>
+      <a href="{{ url_for('interview.finish_interview', session_id=interview.id) }}" class="btn btn-sm btn-secondary" onclick="return confirm('Are you sure you want to conclude the interview and view your scorecard now?');">
+        Conclude Interview
+      </a>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="interview-progress-bar-container">
+    <div class="interview-progress-bar" style="width: {{ (current_index / total_questions) * 100 }}%;"></div>
+  </div>
+
+  <!-- AI Interviewer Card -->
+  <div class="interviewer-card">
+    <div class="interviewer-header">
+      <div class="interviewer-avatar">AI</div>
+      <div class="interviewer-info">
+        <h3>PrepMate AI Interviewer</h3>
+        <p>Evaluating technical accuracy, depth, pacing, and communication clarity</p>
+      </div>
+    </div>
+
+    <div class="question-box">
+      <p class="question-text" id="questionContent">{{ question.question_text }}</p>
+    </div>
+
+    <div class="question-controls">
+      <button type="button" id="playQuestionBtn" class="btn btn-sm btn-secondary">
+        🔊 Listen to Question
+      </button>
+    </div>
+  </div>
+
+  <!-- Candidate Studio -->
+  <div class="recording-studio">
+    <div class="studio-tabs">
+      <button type="button" class="tab-btn active" id="voiceTabBtn">🎤 Voice Answer (Primary Mode)</button>
+      <button type="button" class="tab-btn" id="textTabBtn">⌨️ Text Answer (Quiet Mode)</button>
+    </div>
+
+    <!-- Voice Mode Studio -->
+    <div id="voiceStudio">
+      <!-- Waveform Canvas -->
+      <div class="waveform-container">
+        <canvas id="waveformCanvas" width="800" height="120"></canvas>
+        <div class="waveform-placeholder" id="waveformPlaceholder">
+          <span>Click the microphone below and speak naturally</span>
+        </div>
+      </div>
+
+      <!-- Real-time HUD -->
+      <div class="live-metrics-hud">
+        <div class="metric-tile">
+          <div class="label">Speaking Duration</div>
+          <div class="value" id="timerDisplay">00:00</div>
+        </div>
+        <div class="metric-tile">
+          <div class="label">Live Speaking Speed</div>
+          <div class="value"><span id="wpmDisplay">0</span> <small style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">WPM</small></div>
+        </div>
+        <div class="metric-tile">
+          <div class="label">Fillers Detected</div>
+          <div class="value" id="fillerDisplay" style="color: #ef4444;">0</div>
+        </div>
+      </div>
+
+      <!-- Record Action -->
+      <div class="studio-controls">
+        <button type="button" class="btn-record" id="recordBtn" title="Click to Record">
+          🎤
+        </button>
+        <button type="button" class="btn btn-secondary" id="stopBtn" disabled>
+          ⏹️ Pause / Finish Speaking
+        </button>
+      </div>
+
+      <!-- Live Transcript Display -->
+      <div>
+        <label class="form-label" style="display: flex; justify-content: space-between;">
+          <span>Speech Transcript (Azure Speech / Live Recognition)</span>
+          <small style="color: var(--text-muted); font-weight: normal;">Updates automatically as you speak</small>
+        </label>
+        <div class="transcript-box empty" id="liveTranscript">
+          Listening... Speak clearly into your microphone.
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Mode Studio (Fallback) -->
+    <div id="textStudio" style="display: none;">
+      <div class="form-group">
+        <label class="form-label" for="manualAnswerText">Type your interview answer</label>
+        <textarea id="manualAnswerText" rows="6" class="form-control" placeholder="Type your structured explanation here (Include definitions, mechanisms, and concrete code/real-world examples)..."></textarea>
+        <span class="form-text">Communication analysis will evaluate answer structure, vocabulary richness, and filler usage.</span>
+      </div>
+    </div>
+
+    <!-- Submit Section -->
+    <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.25rem;">
+      <button type="button" id="submitBtn" class="btn btn-primary btn-lg">
+        🚀 Submit Answer & Next Question
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/interview.js') }}"></script>
+{% endblock %}

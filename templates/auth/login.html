@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - PrepMate{% endblock %}
+
+{% block content %}
+<div style="max-width: 460px; margin: 1.5rem auto 2.5rem; width: 100%;">
+  <div class="card">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--dark);">Welcome Back</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.3rem;">Sign in to continue your interview training</p>
+    </div>
+
+    <!-- Quick Demo Access Banner -->
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 0.85rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #1e40af;">
+      <strong>💡 Evaluator / Demo Credentials:</strong><br>
+      Email: <code>student@chitkara.edu.in</code><br>
+      Password: <code>password123</code>
+      <button type="button" id="fillDemoBtn" class="btn btn-sm btn-secondary" style="margin-top: 0.5rem; width: 100%; font-size: 0.8rem;">
+        ⚡ Fill Demo Credentials
+      </button>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <div class="form-group">
+        <label class="form-label" for="email">Student Email</label>
+        <input type="email" id="email" name="email" class="form-control" required placeholder="Enter your email address">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" required placeholder="Enter your password">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+        Sign In to PrepMate
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+      Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: var(--primary); font-weight: 600; text-decoration: none;">Register here</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("fillDemoBtn")?.addEventListener("click", () => {
+    document.getElementById("email").value = "student@chitkara.edu.in";
+    document.getElementById("password").value = "password123";
+  });
+</script>
+{% endblock %}

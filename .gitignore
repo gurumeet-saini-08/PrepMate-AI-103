@@ -1,0 +1,33 @@
+# Environment credentials & keys (Crucial for AI-103 Rubric)
+.env
+*.env
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Database files
+*.db
+*.sqlite3
+instance/
+
+# Temporary audio and uploads
+temp_audio/
+uploads/
+*.wav
+*.mp3
+*.webm
+*.ogg
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

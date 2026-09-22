@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Configure Interview - PrepMate{% endblock %}
+
+{% block content %}
+<div style="max-width: 650px; margin: 2rem auto 3rem;">
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 800; color: var(--dark);">Configure Your Mock Interview</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.3rem;">
+      Set your target position and difficulty. The AI Agent will adapt following questions based on your performance.
+    </p>
+  </div>
+
+  <div class="card">
+    <form method="POST" action="{{ url_for('interview.setup') }}">
+      <div class="form-group">
+        <label class="form-label" for="role">Target Job Role</label>
+        <select id="role" name="role" class="form-control" required>
+          <option value="" disabled {% if not profile or not profile.target_role %}selected{% endif %}>Select Target Job Role</option>
+          <option value="Software Developer" {% if profile and profile.target_role == 'Software Developer' %}selected{% endif %}>Software Developer (Java / Python / DSA)</option>
+          <option value="Java Developer" {% if profile and profile.target_role == 'Java Developer' %}selected{% endif %}>Java Developer (Core Java, Spring Boot, OOP)</option>
+          <option value="Backend Developer" {% if profile and profile.target_role == 'Backend Developer' %}selected{% endif %}>Backend Developer (APIs, Databases, System Architecture)</option>
+          <option value="Frontend Developer" {% if profile and profile.target_role == 'Frontend Developer' %}selected{% endif %}>Frontend Developer (JavaScript, DOM, Web Performance)</option>
+          <option value="Full Stack Developer" {% if profile and profile.target_role == 'Full Stack Developer' %}selected{% endif %}>Full Stack Developer (React, Node / Python, SQL)</option>
+          <option value="Data Analyst" {% if profile and profile.target_role == 'Data Analyst' %}selected{% endif %}>Data Analyst (SQL, Analytics, Window Functions)</option>
+          <option value="AI/ML Engineer" {% if profile and profile.target_role == 'AI/ML Engineer' %}selected{% endif %}>AI/ML Engineer (Machine Learning, Model Evaluation)</option>
+        </select>
+        <span class="form-text">Choose the technical discipline you want to practice.</span>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label" for="difficulty">Starting Difficulty</label>
+          <select id="difficulty" name="difficulty" class="form-control" required>
+            <option value="" disabled>Select Starting Difficulty</option>
+            <option value="Beginner">Beginner (Core definitions & basics)</option>
+            <option value="Intermediate" selected>Intermediate (Standard campus hiring)</option>
+            <option value="Advanced">Advanced (Deep dive & edge cases)</option>
+          </select>
+          <span class="form-text">Note: The AI Agent dynamically escalates or scaffolds based on your answers!</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="total_questions">Number of Questions</label>
+          <select id="total_questions" name="total_questions" class="form-control">
+            <option value="3" selected>3 Questions (Recommended for crisp practice)</option>
+            <option value="5">5 Questions (Standard Mock Session)</option>
+            <option value="10">10 Questions (Comprehensive Evaluation)</option>
+          </select>
+          <span class="form-text">Tip: 3 questions is ideal for a crisp 5-minute demonstration.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="interview_mode">Evaluation Mode</label>
+        <select id="interview_mode" name="interview_mode" class="form-control">
+          <option value="Technical + Communication" selected>Technical Accuracy + Spoken Communication (Full AI Coach)</option>
+          <option value="Technical Only">Technical Accuracy Focus</option>
+          <option value="Communication Only">Communication & Articulation Focus</option>
+        </select>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; margin: 1.5rem 0; font-size: 0.85rem; color: #475569; display: flex; align-items: center; gap: 0.65rem;">
+        <i class="bi bi-mic-fill text-primary" style="font-size: 1.1rem; color: var(--primary);"></i>
+        <span><strong>Microphone Setup:</strong> You will be prompted for microphone permission when entering the interview studio. Both voice recording and manual text input are supported.</span>
+      </div>
+
+      <div class="form-actions-responsive">
+        <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="bi bi-rocket-takeoff-fill"></i> Enter Interview Room
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

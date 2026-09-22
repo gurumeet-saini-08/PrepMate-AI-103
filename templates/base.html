@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PrepMate - AI Interview & Communication Coach{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  {% block extra_css %}{% endblock %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="{{ url_for('index') }}" class="brand">
+        <span><i class="bi bi-rocket-takeoff-fill" style="margin-right: 0.25rem;"></i>PrepMate</span>
+        <span class="brand-badge">AI-103</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
+      <div class="nav-links" id="navLinks">
+        <div class="nav-status-pill" id="navStatusPill" title="System Operational Mode">
+          <span class="status-dot" id="navStatusDot"></span>
+          <span id="navStatusText">Checking Azure...</span>
+        </div>
+
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('dashboard.dashboard') }}"><i class="bi bi-speedometer2" style="margin-right: 0.35rem;"></i>Dashboard</a>
+          <a href="{{ url_for('interview.setup') }}"><i class="bi bi-mic-fill" style="margin-right: 0.35rem;"></i>New Interview</a>
+          <a href="{{ url_for('dashboard.history') }}"><i class="bi bi-clock-history" style="margin-right: 0.35rem;"></i>History</a>
+          <a href="{{ url_for('profile.profile_setup') }}"><i class="bi bi-person-circle" style="margin-right: 0.35rem;"></i>Profile</a>
+          <a href="{{ url_for('responsible_ai') }}"><i class="bi bi-shield-check" style="margin-right: 0.35rem;"></i>Responsible AI</a>
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-secondary"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+        {% else %}
+          <a href="{{ url_for('responsible_ai') }}"><i class="bi bi-shield-check" style="margin-right: 0.35rem;"></i>Responsible AI</a>
+          <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-secondary"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-sm btn-primary" style="color: white;"><i class="bi bi-person-plus-fill"></i> Get Started</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Alerts -->
+  <div class="alerts-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main Content Body -->
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <strong>PrepMate</strong> &copy; 2026 | Chitkara University & INBIOT AI-103 Group Project
+      </div>
+      <ul class="footer-links">
+        <li><a href="{{ url_for('responsible_ai') }}">Responsible AI</a></li>
+        <li><a href="https://azure.microsoft.com/" target="_blank" rel="noopener">Azure AI Services</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Ambient Cursor & Mouse Effects -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Interview History - PrepMate{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 1rem auto 3rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h1 style="font-size: 2rem; font-weight: 800; color: var(--dark);">Interview History</h1>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">Track your progress and technical communication growth over time.</p>
+    </div>
+    <a href="{{ url_for('interview.setup') }}" class="btn btn-primary">
+      🎙️ Start New Interview
+    </a>
+  </div>
+
+  {% if interviews %}
+    <div class="card">
+      <div class="table-scroll-hint">← Swipe horizontally to view full table →</div>
+      <div class="table-responsive">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">
+              <th style="padding: 0.75rem 0.5rem;">Target Role</th>
+              <th style="padding: 0.75rem 0.5rem;">Difficulty</th>
+              <th style="padding: 0.75rem 0.5rem;">Date & Time</th>
+              <th style="padding: 0.75rem 0.5rem;">Duration</th>
+              <th style="padding: 0.75rem 0.5rem;">Overall</th>
+              <th style="padding: 0.75rem 0.5rem;">Correctness</th>
+              <th style="padding: 0.75rem 0.5rem;">Communication</th>
+              <th style="padding: 0.75rem 0.5rem;">Avg WPM</th>
+              <th style="padding: 0.75rem 0.5rem; text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for session in interviews %}
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 1rem 0.5rem; font-weight: 700; color: var(--dark);">{{ session.role }}</td>
+                <td style="padding: 1rem 0.5rem;">
+                  <span class="badge badge-primary">{{ session.difficulty }}</span>
+                </td>
+                <td style="padding: 1rem 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                  {{ session.start_time.strftime('%b %d, %Y %I:%M %p') }}
+                </td>
+                <td style="padding: 1rem 0.5rem; color: var(--text-muted); font-size: 0.85rem;">
+                  {{ session.duration_formatted() }}
+                </td>
+                <td style="padding: 1rem 0.5rem;">
+                  {% if session.status == 'completed' %}
+                    <strong style="color: var(--primary); font-size: 1.05rem;">{{ session.overall_score }}%</strong>
+                  {% else %}
+                    <span class="badge badge-warning">Incomplete</span>
+                  {% endif %}
+                </td>
+                <td style="padding: 1rem 0.5rem;">
+                  {% if session.status == 'completed' %}
+                    <span style="color: #0891b2; font-weight: 600;">{{ session.technical_score }}%</span>
+                  {% else %}-{% endif %}
+                </td>
+                <td style="padding: 1rem 0.5rem;">
+                  {% if session.status == 'completed' %}
+                    <span style="color: #059669; font-weight: 600;">{{ session.communication_score }}%</span>
+                  {% else %}-{% endif %}
+                </td>
+                <td style="padding: 1rem 0.5rem; font-size: 0.9rem;">
+                  {{ session.avg_wpm }} WPM
+                </td>
+                <td style="padding: 1rem 0.5rem; text-align: right;">
+                  {% if session.status == 'completed' %}
+                    <a href="{{ url_for('interview.report', session_id=session.id) }}" class="btn btn-sm btn-secondary">View Report</a>
+                  {% else %}
+                    <a href="{{ url_for('interview.interview_room', session_id=session.id) }}" class="btn btn-sm btn-primary">Resume</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="card" style="text-align: center; padding: 3rem 1rem;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📋</div>
+      <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem;">No Interview History Yet</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Once you complete an interview session, your full scorecard will appear here.</p>
+      <a href="{{ url_for('interview.setup') }}" class="btn btn-primary">Start Your First Mock Interview</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
